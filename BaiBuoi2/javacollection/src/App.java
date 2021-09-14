@@ -1,7 +1,7 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class App {
     public static void addList(List<Person> listPerson) {
@@ -27,28 +27,16 @@ public class App {
         listPerson.stream().filter(p -> (p.getAge() >= 20)).filter(p -> (p.getAge() <= 30))
                 .sorted((p1, p2) -> (p1.getAge() - p2.getAge())).forEach(p -> System.out.println(p.toString()));
         // Tinh tuoi trung binh
-        int total = 0;
-        for (Person person : listPerson) {
-            total += person.getAge();
-        }
-        System.out.printf("Tuoi trung binh cua tat ca moi nguoi la: %.2f\n", ((float) total / listPerson.size()));
+        double avgAllAge = listPerson.stream().mapToDouble(Person::getAge).average().getAsDouble();
+        System.out.printf("Tuoi trung binh cua moi nguoi la: %.2f\n", avgAllAge);
         // Tinh tuoi theo quoc gia
-        Map<String, List<Person>> nationalityAge = new HashMap<String, List<Person>>();
-        for (Person person : listPerson) {
-            List<Person> listNation = nationalityAge.getOrDefault(person.getNationality(), new ArrayList<Person>());
-            listNation.add(person);
-            nationalityAge.put(person.getNationality(), listNation);
-        }
         System.out.println("Tinh tuoi trung binh theo quoc gia");
-        for (var nation : nationalityAge.entrySet()) {
-            List<Person> nationList = nation.getValue();
-            int nationAge = 0;
-            for (Person person : nationList) {
-                nationAge += person.getAge();
-            }
-            System.out.printf("Tuoi trung binh cua %s la: %.2f \n", nation.getKey(),
-                    ((float) nationAge / nationList.size()));
-        }
-
+        Set<String> nationality = new HashSet<String>();
+        listPerson.stream().forEach(p -> nationality.add(p.getNationality()));
+        nationality.stream().forEach(nat -> {
+            double avgAge = listPerson.stream().filter(p -> (p.getNationality().equals(nat)))
+                    .mapToDouble(Person::getAge).average().getAsDouble();
+            System.out.printf("Tuoi trung binh cua %s la: %.2f \n", nat, avgAge);
+        });
     }
 }
