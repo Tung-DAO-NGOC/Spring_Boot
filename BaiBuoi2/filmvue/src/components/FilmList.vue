@@ -3,12 +3,12 @@
     <li v-for="(film, index) in films" :key="index" :film="film">
       {{
         '"' +
-        film.title +
-        ' - "' +
-        film.director +
-        '"' +
-        " - " +
-        film.publishedYear
+          film.title +
+          ' - "' +
+          film.director +
+          '"' +
+          " - " +
+          film.publishedYear
       }}
     </li>
   </ul>
