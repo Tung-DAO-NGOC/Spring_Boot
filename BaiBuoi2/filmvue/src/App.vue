@@ -41,11 +41,11 @@ export default {
 
 <style>
 #app {
-  font-family: "SF Mono", Helvetica, Arial, sans-serif;
+  font-family: "Times New Roman", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  color: #2c3e50;
+  text-align: center;
+  color: #2f754c;
   margin-top: 20px;
 }
 </style>
