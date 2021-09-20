@@ -38,6 +38,7 @@ public class BookDAO implements DAO<Book> {
     public List<Book> readAll() {
         return listBook;
     }
+}
 ```
 
 ## Bước 3: Tạo controller để render kết quả
