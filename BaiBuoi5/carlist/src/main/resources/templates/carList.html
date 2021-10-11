@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="template::head"> </head>
+
+	<body>
+		<nav th:replace="template::navBar"></nav>
+		<div class="contain" align="center">
+			<br />
+			<h1>Car List</h1>
+			<br />
+			<table class="table table-striped w-auto">
+				<thead class="bg-success text-white">
+					<tr style="text-align: center">
+						<th>ID</th>
+						<th>Model</th>
+						<th>Manufacturer</th>
+						<th>Price</th>
+						<th>Sale</th>
+						<th>Image</th>
+						<th colspan="2">Action</th>
+					</tr>
+				</thead>
+				<tbody style="text-align: center">
+					<tr th:each=" car : ${carList}">
+						<td th:text="${car.id}"></td>
+						<td th:text="${car.model}"></td>
+						<td th:text="${car.manufacturer}"></td>
+						<td th:text="${car.price}"></td>
+						<td th:text="${car.sale}"></td>
+						<td><img th:src="${car.image}" /></td>
+						<td>
+							<a th:href="@{/edit/{id}(id = ${car.id})}"
+								><button type="button" class="btn-warning">Edit</button>
+							</a>
+						</td>
+						<td>
+							<a th:href="@{/delete/{id}(id = ${car.id})}"
+								><button type="button" class="btn-danger">Delete</button>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

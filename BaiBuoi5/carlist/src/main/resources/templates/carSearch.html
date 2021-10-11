@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="template::head"> </head>
+	<body>
+		<div class="script" th:replace="template::script"></div>
+		<div class="content" align="center">
+			<br />
+			<form th:action="@{/search}" method="post">
+				<h1>Search Form</h1>
+				<table class="table w-auto">
+					<div class="keyword" th:object="${keyword}">
+						<tr>
+							<th>Keyword</th>
+							<td>
+								<input
+									type="text"
+									name="keyword"
+									th:value="${keyword}"
+									placeholder="Your keyword here"
+								/>
+							</td>
+						</tr>
+					</div>
+					<div class="sort" th:object="${sort}">
+						<tr>
+							<th>Sort by</th>
+							<td>
+								<select name="sort">
+									<option th:selected="${#strings.equals(sort, '')}" value="">
+										-- Select an Option --
+									</option>
+									<option th:selected="${#strings.equals(sort, 'priceInc')}" value="priceInc">
+										Price by Increase
+									</option>
+									<option th:selected="${#strings.equals(sort, 'priceDec')}" value="priceDec">
+										Price by Decrease
+									</option>
+									<option th:selected="${#strings.equals(sort, 'saleInc')}" value="saleInc">
+										Sale by Increase
+									</option>
+									<option th:selected="${#strings.equals(sort, 'saleDec')}" value="saleDec">
+										Sale by Decrease
+									</option>
+									<option th:selected="${#strings.equals(sort, 'modelInc')}" value="modelInc">
+										Model (A -> Z)
+									</option>
+									<option th:selected="${#strings.equals(sort, 'modelDec')}" value="modelDec">
+										Model (Z -> A)
+									</option>
+									<option th:selected="${#strings.equals(sort, 'manuInc')}" value="manuInc">
+										Manufacturer (A -> Z)
+									</option>
+									<option th:selected="${#strings.equals(sort, 'manuDec')}" value="manuDec">
+										Manufacturer (Z -> A)
+									</option>
+								</select>
+							</td>
+						</tr>
+					</div>
+				</table>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+			<br />
+			<div class="list">
+				<h1>Car List</h1>
+				<table class="table table-striped w-auto">
+					<thead class="bg-success text-white">
+						<tr style="text-align: center">
+							<th>ID</th>
+							<th>Model</th>
+							<th>Manufacturer</th>
+							<th>Price</th>
+							<th>Sale</th>
+							<th>Image</th>
+						</tr>
+					</thead>
+					<tbody style="text-align: center">
+						<tr th:each=" car : ${carList}">
+							<td th:text="${car.id}"></td>
+							<td th:text="${car.model}"></td>
+							<td th:text="${car.manufacturer}"></td>
+							<td th:text="${car.price}"></td>
+							<td th:text="${car.sale}"></td>
+							<td><img th:src="${car.image}" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>

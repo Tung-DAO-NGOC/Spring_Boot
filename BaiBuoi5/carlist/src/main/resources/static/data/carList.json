@@ -1,0 +1,242 @@
+[
+	{
+		"id": 1,
+		"model": "Sonic",
+		"manufacturer": "Chevrolet",
+		"price": 440,
+		"sale": 52,
+		"image": "http://dummyimage.com/100x100.png/dddddd/000000"
+	},
+	{
+		"id": 2,
+		"model": "3000GT",
+		"manufacturer": "Mitsubishi",
+		"price": 486,
+		"sale": 39,
+		"image": "http://dummyimage.com/100x100.png/cc0000/ffffff"
+	},
+	{
+		"id": 3,
+		"model": "Express 1500",
+		"manufacturer": "Chevrolet",
+		"price": 332,
+		"sale": 95,
+		"image": "http://dummyimage.com/100x100.png/5fa2dd/ffffff"
+	},
+	{
+		"id": 4,
+		"model": "Civic",
+		"manufacturer": "Honda",
+		"price": 514,
+		"sale": 84,
+		"image": "http://dummyimage.com/100x100.png/ff4444/ffffff"
+	},
+	{
+		"id": 5,
+		"model": "Suburban 2500",
+		"manufacturer": "Chevrolet",
+		"price": 546,
+		"sale": 16,
+		"image": "http://dummyimage.com/100x100.png/ff4444/ffffff"
+	},
+	{
+		"id": 6,
+		"model": "Golf",
+		"manufacturer": "Volkswagen",
+		"price": 365,
+		"sale": 81,
+		"image": "http://dummyimage.com/100x100.png/5fa2dd/ffffff"
+	},
+	{
+		"id": 7,
+		"model": "F150",
+		"manufacturer": "Ford",
+		"price": 390,
+		"sale": 19,
+		"image": "http://dummyimage.com/100x100.png/5fa2dd/ffffff"
+	},
+	{
+		"id": 8,
+		"model": "Breeze",
+		"manufacturer": "Plymouth",
+		"price": 346,
+		"sale": 54,
+		"image": "http://dummyimage.com/100x100.png/5fa2dd/ffffff"
+	},
+	{
+		"id": 9,
+		"model": "Land Cruiser",
+		"manufacturer": "Toyota",
+		"price": 321,
+		"sale": 54,
+		"image": "http://dummyimage.com/100x100.png/5fa2dd/ffffff"
+	},
+	{
+		"id": 10,
+		"model": "Charger",
+		"manufacturer": "Dodge",
+		"price": 554,
+		"sale": 12,
+		"image": "http://dummyimage.com/100x100.png/5fa2dd/ffffff"
+	},
+	{
+		"id": 11,
+		"model": "Astro",
+		"manufacturer": "Chevrolet",
+		"price": 588,
+		"sale": 50,
+		"image": "http://dummyimage.com/100x100.png/ff4444/ffffff"
+	},
+	{
+		"id": 12,
+		"model": "Camry",
+		"manufacturer": "Toyota",
+		"price": 493,
+		"sale": 44,
+		"image": "http://dummyimage.com/100x100.png/cc0000/ffffff"
+	},
+	{
+		"id": 13,
+		"model": "Gemini",
+		"manufacturer": "Pontiac",
+		"price": 500,
+		"sale": 59,
+		"image": "http://dummyimage.com/100x100.png/dddddd/000000"
+	},
+	{
+		"id": 14,
+		"model": "Sunbird",
+		"manufacturer": "Pontiac",
+		"price": 520,
+		"sale": 14,
+		"image": "http://dummyimage.com/100x100.png/5fa2dd/ffffff"
+	},
+	{
+		"id": 15,
+		"model": "Tacoma",
+		"manufacturer": "Toyota",
+		"price": 514,
+		"sale": 26,
+		"image": "http://dummyimage.com/100x100.png/cc0000/ffffff"
+	},
+	{
+		"id": 16,
+		"model": "GS",
+		"manufacturer": "Lexus",
+		"price": 499,
+		"sale": 98,
+		"image": "http://dummyimage.com/100x100.png/cc0000/ffffff"
+	},
+	{
+		"id": 17,
+		"model": "Firebird",
+		"manufacturer": "Pontiac",
+		"price": 568,
+		"sale": 26,
+		"image": "http://dummyimage.com/100x100.png/dddddd/000000"
+	},
+	{
+		"id": 18,
+		"model": "Chariot",
+		"manufacturer": "Mitsubishi",
+		"price": 493,
+		"sale": 51,
+		"image": "http://dummyimage.com/100x100.png/ff4444/ffffff"
+	},
+	{
+		"id": 19,
+		"model": "V8 Vantage",
+		"manufacturer": "Aston Martin",
+		"price": 495,
+		"sale": 40,
+		"image": "http://dummyimage.com/100x100.png/dddddd/000000"
+	},
+	{
+		"id": 20,
+		"model": "Continental Super",
+		"manufacturer": "Bentley",
+		"price": 480,
+		"sale": 59,
+		"image": "http://dummyimage.com/100x100.png/5fa2dd/ffffff"
+	},
+	{
+		"id": 21,
+		"model": "ZDX",
+		"manufacturer": "Acura",
+		"price": 536,
+		"sale": 26,
+		"image": "http://dummyimage.com/100x100.png/ff4444/ffffff"
+	},
+	{
+		"id": 22,
+		"model": "Tundra",
+		"manufacturer": "Toyota",
+		"price": 490,
+		"sale": 26,
+		"image": "http://dummyimage.com/100x100.png/cc0000/ffffff"
+	},
+	{
+		"id": 23,
+		"model": "L-Series",
+		"manufacturer": "Saturn",
+		"price": 432,
+		"sale": 10,
+		"image": "http://dummyimage.com/100x100.png/dddddd/000000"
+	},
+	{
+		"id": 24,
+		"model": "Prelude",
+		"manufacturer": "Honda",
+		"price": 420,
+		"sale": 99,
+		"image": "http://dummyimage.com/100x100.png/ff4444/ffffff"
+	},
+	{
+		"id": 25,
+		"model": "Cutlass Cruiser",
+		"manufacturer": "Oldsmobile",
+		"price": 536,
+		"sale": 57,
+		"image": "http://dummyimage.com/100x100.png/cc0000/ffffff"
+	},
+	{
+		"id": 26,
+		"model": "E-Series",
+		"manufacturer": "Ford",
+		"price": 486,
+		"sale": 95,
+		"image": "http://dummyimage.com/100x100.png/cc0000/ffffff"
+	},
+	{
+		"id": 27,
+		"model": "Element",
+		"manufacturer": "Honda",
+		"price": 570,
+		"sale": 28,
+		"image": "http://dummyimage.com/100x100.png/5fa2dd/ffffff"
+	},
+	{
+		"id": 28,
+		"model": "Pathfinder",
+		"manufacturer": "Nissan",
+		"price": 575,
+		"sale": 83,
+		"image": "http://dummyimage.com/100x100.png/cc0000/ffffff"
+	},
+	{
+		"id": 29,
+		"model": "Suburban",
+		"manufacturer": "Chevrolet",
+		"price": 516,
+		"sale": 27,
+		"image": "http://dummyimage.com/100x100.png/5fa2dd/ffffff"
+	},
+	{
+		"id": 30,
+		"model": "ZX2",
+		"manufacturer": "Ford",
+		"price": 520,
+		"sale": 20,
+		"image": "http://dummyimage.com/100x100.png/cc0000/ffffff"
+	}
+]
