@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="template::head"> </head>
+
+	<body>
+		<div class="navBar" th:replace="template::navBar"></div>
+		<div class="context" align="center">
+			<br />
+			<form th:action="@{/search}" method="post" th:object="${searchReq}">
+				<table class="table table-striped w-auto">
+					<tbody>
+						<tr class="text-center">
+							<td colspan="3"><span class="text-capitalize fw-bold">Search by:</span></td>
+						</tr>
+						<tr>
+							<td>
+								<select class="form-control input-mini" th:field="*{field}" required>
+									<option value="">--Select Field--</option>
+									<option value="email">Email</option>
+									<option value="name">Name</option>
+								</select>
+							</td>
+							<td><input type="text" placeholder="Your keyword" th:field="*{keyword}" /></td>
+							<td>
+								<select class="form-control input-mini" th:field="*{order}" required>
+									<option value="">--Select Order--</option>
+									<option value="inc">A -> Z</option>
+									<option value="desc">Z -> A</option>
+								</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<button type="submit" class="btn btn-sm btn-primary">Submit</button>
+			</form>
+			<br />
+			<h1>List of Employee</h1>
+			<br />
+			<table class="table table-striped w-auto">
+				<thead class="bg-success text-white">
+					<tr style="text-align: center">
+						<th>Full Name</th>
+						<th>Email</th>
+						<th>Passport Number</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="emp : ${list}">
+						<td th:text="${emp.fullName}"></td>
+						<td th:text="${emp.emailID}"></td>
+						<td th:text="${emp.passportNumber}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="script" th:replace="template::script"></div>
+	</body>
+</html>

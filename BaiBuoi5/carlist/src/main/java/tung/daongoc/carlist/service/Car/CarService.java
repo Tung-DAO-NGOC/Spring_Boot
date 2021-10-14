@@ -39,4 +39,9 @@ public class CarService implements iService<Car> {
         return carDAO.search(keyword, sort);
     }
 
+    @Override
+    public void add(Car newObject) {
+        carDAO.add(newObject);
+    }
+
 }

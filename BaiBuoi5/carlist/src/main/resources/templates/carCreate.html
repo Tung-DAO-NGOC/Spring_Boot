@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="template::head"> </head>
+	<body>
+		<div class="navbar" th:replace="template::navBar"></div>
+		<div class="context" align="center">
+			<br />
+			<div>
+				<h1>New Info</h1>
+			</div>
+			<a th:href="@{/list}">
+				<button type="button" class="btn btn-primary">Return</button>
+				<br />
+			</a>
+			<form th:action="@{/create}" method="POST" th:object="${car}">
+				<table class="table w-auto">
+					<tbody>
+						<tr>
+							<th>ID</th>
+							<td><input type="number" required name="id" /></td>
+						</tr>
+						<tr>
+							<th>Model</th>
+							<td><input type="text" required name="model" /></td>
+						</tr>
+						<tr>
+							<th>Manufacturer</th>
+							<td><input type="text" required name="manufacturer" /></td>
+						</tr>
+						<tr>
+							<th>Price</th>
+							<td><input type="number" required name="price" /></td>
+						</tr>
+						<tr>
+							<th>Sale</th>
+							<td><input type="number" required name="sale" /></td>
+						</tr>
+						<tr>
+							<th>Image</th>
+							<td><input type="text" name="image" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<button type="submit" class="btn-success">Submit</button>
+			</form>
+		</div>
+		<div class="script" th:replace="template::script"></div>
+	</body>
+</html>

@@ -87,4 +87,9 @@ public class CarDAO implements DAO<Car> {
         return returnList;
     }
 
+    @Override
+    public void add(Car newObject) {
+        listCar.add(newObject);
+    }
+
 }

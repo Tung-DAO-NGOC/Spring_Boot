@@ -29,6 +29,18 @@ public class ThymeController {
         return "carList";
     }
 
+    @GetMapping("/create")
+    public String carCreateForm(Model model) {
+        model.addAttribute("title", "Create form");
+        return "carCreate";
+    }
+
+    @PostMapping("/create")
+    public String carCreate(@ModelAttribute(value = "car") Car newCar, Model model) {
+        carService.add(newCar);
+        return "redirect:/list";
+    }
+
     @GetMapping("/edit/{id}")
     public String editCar(@PathVariable(value = "id") int ID, Model model) {
         model.addAttribute("title", "Edit Form");

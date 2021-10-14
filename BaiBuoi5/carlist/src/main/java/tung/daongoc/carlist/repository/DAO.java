@@ -15,4 +15,6 @@ public interface DAO<T> {
     void deleteByID(int ID);
 
     List<T> search(String keyword, String sort);
+
+    void add(T newObject);
 }
