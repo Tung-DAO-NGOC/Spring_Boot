@@ -61,6 +61,24 @@
     }
     ```
 
+-   Tạo method so sánh từ khóa với trường dữ liệu `emailID` và `fullName` tại entity `Employee`
+
+    ```java
+    public boolean containsIgnoreCase(String src, String what) {
+        what = what.toLowerCase();
+        src = src.toLowerCase();
+        return src.contains(what);
+    }
+
+    public boolean matchingName(String keyword) {
+        return this.containsIgnoreCase(this.fullName, keyword);
+    }
+
+    public boolean matchingEmail(String keyword) {
+        return this.containsIgnoreCase(this.emailID, keyword);
+    }
+    ```
+
 -   Trên render thymeleaf
 
     ```html
