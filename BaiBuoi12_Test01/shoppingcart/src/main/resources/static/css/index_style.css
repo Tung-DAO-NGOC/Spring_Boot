@@ -1,0 +1,8 @@
+p.title {
+	font-size: 5rem;
+	font-weight: 600;
+	text-transform: capitalize;
+	margin-top: 5rem;
+	display: flex;
+	justify-content: center;
+}

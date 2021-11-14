@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html
+	lang="en"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}"
+>
+	<head>
+		<title>Homepage</title>
+		<link th:rel="stylesheet" th:href="@{css/index_style.css}" />
+	</head>
+	<body>
+		<section layout:fragment="content">
+			<p class="title" th:text="#{index_quote}"></p>
+		</section>
+	</body>
+</html>

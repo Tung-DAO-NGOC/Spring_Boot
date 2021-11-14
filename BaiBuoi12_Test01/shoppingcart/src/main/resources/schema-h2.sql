@@ -1,0 +1,9 @@
+CREATE TABLE product (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    manufacturer VARCHAR(30) NOT NULL,
+    price BIGINT UNSIGNED NOT NULL,
+    image BLOB,
+	CONSTRAINT pk_id PRIMARY KEY(id)
+);
+

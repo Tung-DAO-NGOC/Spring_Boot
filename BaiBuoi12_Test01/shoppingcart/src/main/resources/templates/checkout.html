@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html
+	lang="en"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}"
+>
+	<head>
+		<title>Checkout Product</title>
+		<link rel="stylesheet" th:href="@{css/checkout_style.css}" />
+	</head>
+	<body>
+		<section layout:fragment="content">
+			<div class="content">
+				<div class="row title">
+					<p class="text-center title" th:text="#{checkout}">Check Out</p>
+				</div>
+				<div class="row checkout">
+					<table class="table table-hover w-auto" style="text-align: center; vertical-align: middle">
+						<caption></caption>
+						<thead class="bg-success text-white text-center">
+							<tr>
+								<th th:text="#{checkout_order}" scope>No.</th>
+								<th th:text="#{checkout_image}" scope>Image</th>
+								<th th:text="#{checkout_name}" scope>Name</th>
+								<th th:text="#{manufacture}" scope>Manu</th>
+								<th th:text="#{price}" scope>Price</th>
+								<th th:text="#{checkout_count}" scope>Count</th>
+								<th th:text="#{checkout_total}" scope>Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="productLine, iterStat:${cart.listProduct}">
+								<td th:text="${iterStat.count}" class="cart_content">No.</td>
+								<td>
+									<div>
+										<img
+											th:unless="${productLine.imageBase64 != null and productLine.imageBase64.length != 0}"
+											th:src="@{img/default.jpg}"
+											alt="productLine_image"
+										/>
+										<img
+											th:if="${productLine.imageBase64 != null and productLine.imageBase64.length != 0}"
+											th:src="|data:image/jpeg;base64,${productLine.imageBase64}|"
+											alt="productLine_image"
+											style="max-height: 19rem"
+										/>
+									</div>
+								</td>
+								<td class="cart_content" th:text="*{productLine.name}">Name</td>
+								<td class="cart_content" th:text="*{productLine.manufacturer}">Manu</td>
+								<td class="cart_content" th:text="${#numbers.formatInteger(productLine.price, 3, 'POINT')}">
+									Price
+								</td>
+								<td class="cart_content" th:text="*{productLine.count}">Count</td>
+								<td
+									class="cart_content"
+									th:text="${#numbers.formatInteger(productLine.price * productLine.count, 3, 'POINT')}"
+								>
+									Total
+								</td>
+							</tr>
+							<tr>
+								<td colspan="5"></td>
+								<th scope th:text="#{checkout_rawtotal}"></th>
+								<td th:text="${#numbers.formatInteger(cart.rawTotal,3,'POINT')} + ' VND'">Raw total</td>
+							</tr>
+							<tr>
+								<td colspan="5"></td>
+								<th scope th:text="#{checkout_discount}"></th>
+								<td th:text="${#numbers.formatInteger(cart.cartDiscount,3,'POINT')} + ' VND'">Discount</td>
+							</tr>
+							<tr>
+								<td colspan="5"></td>
+								<th scope th:text="#{checkout_tax}"></th>
+								<td th:text="${#numbers.formatInteger(cart.taxAmount,3,'POINT')} + ' VND'">Tax</td>
+							</tr>
+							<tr>
+								<td colspan="5"></td>
+								<th scope th:text="#{checkout_finalamount}"></th>
+								<td th:text="${#numbers.formatInteger(cart.finalTotal,3,'POINT')} + ' VND'">Final</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+	</body>
+</html>

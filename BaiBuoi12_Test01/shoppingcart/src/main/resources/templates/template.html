@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" \>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE"></title>
+		<link th:rel="stylesheet" th:href="@{css/style.css}" />
+		<link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}" />
+	</head>
+	<body>
+		<section layout:fragment="navBar">
+			<nav class="navbar navbar-expand-lg navbar-light bg-secondary fixed-top">
+				<div class="navbar-logo col-2">
+					<a href="#" class="text-decoration-none"
+						><p class="text-center h2 text-light" th:text="#{shop_name}"><strong>Clothing Shop</strong></p>
+					</a>
+				</div>
+				<ul class="navbar-nav col-6">
+					<li class="nav-item" th:classappend="${active == 'index' ? 'active': ''}">
+						<a class="nav-link text-light" th:href="@{/index}" th:text="#{home_page}"> Home Page</a>
+					</li>
+					<li class="nav-item" th:classappend="${active == 'list' ? 'active': ''}">
+						<a class="nav-link text-light" th:href="@{/list}" th:text="#{list_product}"> List Item</a>
+					</li>
+					<li class="nav-item" th:classappend="${active == 'add' ? 'active': ''}">
+						<a class="nav-link text-light" th:href="@{/add}" th:text="#{add_product}"> Add Item</a>
+					</li>
+				</ul>
+				<div class="navbar-nav col-2">
+					<a th:href="@{checkout}">
+						<button class="btn-primary btn btn-lg" th:text="|#{checkout} (${cartSize})|">Checkout</button>
+					</a>
+				</div>
+				<div class="navbar-nav col">
+					<span class="flag">
+						<a th:href="@{|${#httpServletRequest.requestURI}?lang=eng|}"
+							><img th:src="@{img/UK_flag.jpg}" alt=""
+						/></a>
+					</span>
+					<span class="flag">
+						<a th:href="@{|${#httpServletRequest.requestURI}?lang=vie|}"
+							><img th:src="@{img/VI_flag.jpg}" alt=""
+						/></a>
+					</span>
+				</div>
+			</nav>
+			<div id="blank"></div>
+		</section>
+		<section layout:fragment="content"></section>
+	</body>
+</html>

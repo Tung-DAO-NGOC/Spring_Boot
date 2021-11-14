@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html
+	lang="en"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}"
+>
+	<head>
+		<title>Add Product</title>
+		<link th:rel="stylesheet" th:href="@{css/add_style.css}" />
+	</head>
+	<body>
+		<section layout:fragment="content">
+			<div class="content">
+				<div class="row title">
+					<p class="text-center title" th:text="#{add_product}">Add Product</p>
+				</div>
+				<form
+					autocomplete="off"
+					th:action="@{/add}"
+					method="post"
+					th:object="${product}"
+					enctype="multipart/form-data"
+				>
+					<table class="table table-hover w-auto">
+						<caption></caption>
+						<thead class="bg-success text-white text-center">
+							<tr>
+								<th scope></th>
+								<th th:text="#{info}" scope>Information</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th th:text="#{checkout_name}" scope>Name</th>
+								<td>
+									<input class="keyboard" type="text" th:field="*{name}" />
+									<p th:if="${#fields.hasErrors('name')}" class="text-danger" th:text="#{product_name_minmax}">
+										Error
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<th th:text="#{manufacture}" scope>Manufacturer</th>
+								<td>
+									<input class="keyboard" type="text" th:field="*{manufacturer}" />
+									<p
+										th:if="${#fields.hasErrors('manufacturer')}"
+										class="text-danger"
+										th:text="${manuError} == 'NB' ? #{product_manufacturer_blank} : #{product_manufacturer_maxsize}"
+									>
+										Error
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<th th:text="#{price}" scope>Price</th>
+								<td>
+									<input class="keyboard" type="number" th:field="*{price}" />
+									<p
+										th:if="${#fields.hasErrors('price')}"
+										class="text-danger"
+										th:text="#{product_price_blank}"
+									>
+										Error
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<th th:text="#{checkout_image}" scope>Image</th>
+								<td>
+									<input type="file" name="" id="" th:field="*{imageMPF}" />
+									<p th:if="${#fields.hasErrors('imageMPF')}" class="text-danger" th:errors="*{imageMPF}">
+										Error
+									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<button type="submit" class="btn btn-primary btn-lg" th:text="#{submit}">Submit</button>
+				</form>
+			</div>
+		</section>
+	</body>
+</html>

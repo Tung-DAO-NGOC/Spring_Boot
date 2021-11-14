@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html
+	lang="en"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}"
+>
+	<head>
+		<title>List Product</title>
+		<link th:rel="stylesheet" th:href="@{css/list_style.css}" />
+	</head>
+	<body>
+		<section layout:fragment="content">
+			<div class="container">
+				<div class="row title">
+					<div class="col-md-12">
+						<p class="text-center title" th:text="#{list_product}">List Product</p>
+					</div>
+					<div th:if="${success != null}">
+						<br />
+						<p class="text-success" th:text="#{addyes}">Successfully Add New Product!</p>
+						<br />
+					</div>
+				</div>
+				<div class="row products">
+					<div class="col-md-3 product-card" th:each="product, iterStat:${productList}">
+						<div class="product-card-inner">
+							<p class="prod-name" th:text="${product.name}">Product Name</p>
+							<div>
+								<img
+									th:unless="${product.imageBase64 != null and product.imageBase64.length != 0}"
+									th:src="@{${'img/skirt0'+iterStat.count+'.jpg'}}"
+									alt="product_image"
+								/>
+								<img
+									th:if="${product.imageBase64 != null and product.imageBase64.length != 0}"
+									th:src="|data:image/jpeg;base64,${product.imageBase64}|"
+									alt="product_image"
+									style="max-height: 19rem"
+								/>
+							</div>
+							<div class="prod-manufacture">
+								<span th:text="#{manufacture}">Manufacture</span>
+								: <span th:text="${product.manufacturer}"></span>
+							</div>
+							<div class="prod-price">
+								<span th:text="#{price}">Price</span>:
+								<span th:text="${#numbers.formatInteger(product.price,3,'POINT')} + ' VND'"></span>
+							</div>
+							<form th:action="@{/buy_{id}(id = ${product.id})}" method="post">
+								<button class="btn btn-primary btn-lg"><span th:text="#{purchase}">Purchase</span></button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</body>
+</html>

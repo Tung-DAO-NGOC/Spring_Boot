@@ -42,7 +42,7 @@ public class Employee {
         }
     }
 
-    public boolean containsIgnoreCase(String src, String what) {
+    private boolean containsIgnoreCase(String src, String what) {
         what = what.toLowerCase();
         src = src.toLowerCase();
         return src.contains(what);

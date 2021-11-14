@@ -1,0 +1,40 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	user-select: none;
+}
+
+/* Navigation Bar */
+
+li {
+	margin: 0 0.5rem;
+	font-weight: 600;
+	height: 100%;
+}
+
+li.active {
+	background: rgb(29, 105, 247);
+	font-weight: bolder;
+}
+
+a.nav-link {
+	font-size: 1.5rem;
+}
+
+a.nav-link:hover {
+	background-color: rgb(29, 105, 247);
+}
+
+.flag {
+	padding: 0px 5px;
+}
+
+.content {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#blank {
+	height: 67px;
+}
