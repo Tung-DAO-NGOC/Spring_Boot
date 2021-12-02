@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "comments")
 @Getter
 @Setter
 @ToString
@@ -26,12 +26,21 @@ public class Comment {
     @JsonBackReference
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    @JsonBackReference
+    private Post post;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Comment comment = (Comment) o;
         return id != null && Objects.equals(id, comment.id);
+    }
+
+    public Comment(String content) {
+        this.content = content;
     }
 
     @Override

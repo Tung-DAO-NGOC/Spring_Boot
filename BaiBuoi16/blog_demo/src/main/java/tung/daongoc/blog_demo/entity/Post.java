@@ -1,10 +1,13 @@
 package tung.daongoc.blog_demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +26,20 @@ public class Post {
     @JsonBackReference
     private User user;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Comment> commentList = new ArrayList<>();
+
+    public void addComment(Comment comment){
+        this.commentList.add(comment);
+        comment.setPost(this);
+    }
+
+    public void removeComment(Comment comment){
+        comment.setPost(null);
+        this.commentList.remove(comment);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -34,5 +51,9 @@ public class Post {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public Post(String title) {
+        this.title = title;
     }
 }
