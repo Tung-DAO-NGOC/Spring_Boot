@@ -68,6 +68,8 @@ public class CartService {
         httpSession.setAttribute(SESSIONCART, cart);
     }
 
+
+
     @SuppressWarnings("unchecked")
     public Cart getCart(HttpSession httpSession) {
         var sessionCartList = httpSession.getAttribute(SESSIONCART);

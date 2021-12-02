@@ -23,5 +23,6 @@ public class Cart {
         this.cartDiscount += (long) (this.rawTotal * DISCOUNTOVERALL);
         this.taxAmount = (long) (this.rawTotal * VAT);
         this.finalTotal = this.rawTotal - this.cartDiscount + this.taxAmount;
+        
     }
 }

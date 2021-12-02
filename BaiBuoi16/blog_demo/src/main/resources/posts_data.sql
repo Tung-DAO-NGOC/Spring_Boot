@@ -1,0 +1,10 @@
+insert into posts (title, user_id) values ('Crazy as Hell', 1);
+insert into posts (title, user_id) values ('Paisan (Paisà)', 4);
+insert into posts (title, user_id) values ('Tony Manero', 5);
+insert into posts (title, user_id) values ('Lady for a Day', 2);
+insert into posts (title, user_id) values ('Pawnbroker, The', 3);
+insert into posts (title, user_id) values ('Not Fade Away', 2);
+insert into posts (title, user_id) values ('Greatest Game Ever Played, The', 3);
+insert into posts (title, user_id) values ('Flaying, The (El Bosque de los Sometidos)', 2);
+insert into posts (title, user_id) values ('Personal Property', 4);
+insert into posts (title, user_id) values ('Tobacco Road', 1);
