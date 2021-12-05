@@ -20,7 +20,6 @@ import tung.daongoc.blog_demo.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 
 @DataJpaTest
