@@ -11,8 +11,7 @@ import java.util.UUID;
 @Table(name = "user")
 public class UserEntity {
     @Id
-    @GenericGenerator(name = "userGenerator", strategy = "user_id_gen")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userGenerator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NaturalId

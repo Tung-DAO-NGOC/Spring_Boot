@@ -1,4 +1,4 @@
-package tung.daongoc.userrole.model.request;
+package tung.daongoc.userrole.model.request.user;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

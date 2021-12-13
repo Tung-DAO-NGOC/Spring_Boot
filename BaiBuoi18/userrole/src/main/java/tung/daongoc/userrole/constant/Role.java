@@ -1,26 +1,31 @@
 package tung.daongoc.userrole.constant;
 
+import tung.daongoc.userrole.exception.constant.RoleNotFoundException;
+
 import java.util.stream.Stream;
 
 public enum Role {
     ADMIN("admin"),
     CUSTOMER("customer"),
-    DEVELOPER("developer");
-    private String role;
+    DEVELOPER("developer"),
+    SALES("sales"),
+    OPERATOR("operator"),
+    TRAINER("trainer");
+    private final String roleName;
 
-    private Role(String role) {
-        this.role = role;
+    Role(String roleName) {
+        this.roleName = roleName;
     }
 
     public String getRole() {
-        return role;
+        return this.roleName;
     }
 
-    public static Role of(String role){
+    public static Role of(String roleName){
         return Stream.of(Role.values())
-                .filter(p -> p.getRole().equalsIgnoreCase(role))
+                .filter(p -> p.getRole().equalsIgnoreCase(roleName))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(RoleNotFoundException::new);
     }
 
 }
