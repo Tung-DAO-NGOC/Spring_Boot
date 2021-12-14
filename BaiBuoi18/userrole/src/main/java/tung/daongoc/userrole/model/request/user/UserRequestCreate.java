@@ -1,16 +1,23 @@
 package tung.daongoc.userrole.model.request.user;
 
-import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserRequestCreate {
 
-    @NotNull(message = "Please provide an email")
+    @NotBlank(message = "Please provide an email")
     @Pattern(regexp = ".+@.+\\..+", message = "Please provide a valid email address")
     private String email;
 
-    @NotNull(message = "Please provide your name")
+    @NotBlank(message = "Please provide your name")
     private String fullName;
 
     @Size(min = 6, message = "Your password must be at least 6 characters")

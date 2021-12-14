@@ -1,6 +1,6 @@
 package tung.daongoc.userrole.constant;
 
-import tung.daongoc.userrole.exception.constant.RoleNotFoundException;
+import tung.daongoc.userrole.exception.notfound.RoleNotFoundException;
 
 import java.util.stream.Stream;
 

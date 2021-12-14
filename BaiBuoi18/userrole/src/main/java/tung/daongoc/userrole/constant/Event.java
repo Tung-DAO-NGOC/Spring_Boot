@@ -1,14 +1,14 @@
 package tung.daongoc.userrole.constant;
 
-import tung.daongoc.userrole.exception.constant.EventNotFoundException;
+import tung.daongoc.userrole.exception.notfound.EventNotFoundException;
 
 import java.util.stream.Stream;
 
 public enum Event {
     CREATE("create","Create Account"),
     LOGIN("login", "Login"),
-    UPDATENAMEEMAIL("update_name_email", "Email/Name Updated"),
-    UPDATEPASS("update_password", "Password Update"),
+    UPDATE_NAME_EMAIL("update_name_email", "Email/Name Updated"),
+    UPDATE_PASS("update_password", "Password Update"),
     RETRIEVE("retrieve", "Retrieve Password");
 
     private final String eventType;
@@ -27,9 +27,9 @@ public enum Event {
         return this.eventName;
     }
 
-    public Event of(String eventType){
+    public static Event of(String eventType){
         return Stream.of(Event.values())
-                .filter(p -> p.getEvent().equalsIgnoreCase(eventType))
+                .filter(p -> p.getEventType().equalsIgnoreCase(eventType))
                 .findFirst()
                 .orElseThrow(EventNotFoundException::new);
     }

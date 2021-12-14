@@ -1,11 +1,19 @@
 package tung.daongoc.userrole.service.inter;
 
 import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.stereotype.Component;
+import tung.daongoc.userrole.constant.GatewayName;
+import tung.daongoc.userrole.model.request.user.UserRequestLogin;
+import tung.daongoc.userrole.model.response.UserResponse;
+
+import java.util.Map;
 
 public interface UserService {
 
-    String testingGateWay();
+    Map<String, Object> userLoginFail(UserRequestLogin userLogin);
 
-    @ServiceActivator(inputChannel = "gateway-test-input")
-    String testingGateWay(String input);
+    Map<String, Object> userLoginSuccess(UserRequestLogin userLogin);
+
+    UserResponse userFindByUuid(String uuid);
+
 }

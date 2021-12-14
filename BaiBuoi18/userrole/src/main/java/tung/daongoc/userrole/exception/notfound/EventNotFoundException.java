@@ -1,6 +1,4 @@
-package tung.daongoc.userrole.exception.constant;
-
-import tung.daongoc.userrole.constant.Event;
+package tung.daongoc.userrole.exception.notfound;
 
 public class EventNotFoundException extends IllegalArgumentException{
     public EventNotFoundException(){};

@@ -1,5 +1,7 @@
 package tung.daongoc.userrole.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
@@ -9,6 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "user")
+@Data
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +33,12 @@ public class UserEntity {
     @JoinTable(name = "user_role",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonManagedReference
     private List<RoleEntity> roleList;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<EventEntity> eventList;
 
     @Column(name = "password", nullable = false)
     private String password;

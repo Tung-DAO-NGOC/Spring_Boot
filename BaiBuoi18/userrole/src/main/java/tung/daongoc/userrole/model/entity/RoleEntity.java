@@ -1,7 +1,9 @@
 package tung.daongoc.userrole.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Data;
 import tung.daongoc.userrole.constant.Role;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "role")
+@Data
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +28,7 @@ public class RoleEntity {
 
     @ManyToMany(mappedBy = "roleList")
     @Column(name = "user")
+    @JsonBackReference
     private List<UserEntity> userList;
 
     @PostLoad
