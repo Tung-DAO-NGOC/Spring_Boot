@@ -7,12 +7,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import tung.daongoc.userrole.constant.Event;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
-
 @Getter
 @Setter
 @ToString
@@ -26,11 +24,8 @@ public class EventEntity {
     @Transient
     private Event event;
 
-    @Column(name = "event_name")
-    private String eventName;
-
-    @Column()
-    private Instant instant;
+    @Column(name = "event_type")
+    private String eventType;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,15 +38,15 @@ public class EventEntity {
 
     @PostLoad
     public void postLoad(){
-        if (!this.eventName.isBlank()){
-            this.event = Event.of(this.eventName);
+        if (!this.eventType.isBlank()){
+            this.event = Event.of(this.eventType);
         }
     }
 
     @PrePersist
     public void prePersist(){
         if (!this.event.getEventType().isBlank()) {
-            this.eventName = this.event.getEventName();
+            this.eventType = this.event.getEventType();
         }
     }
 

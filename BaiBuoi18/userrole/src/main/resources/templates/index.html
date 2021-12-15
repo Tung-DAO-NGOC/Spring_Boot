@@ -23,7 +23,7 @@
 			margin-top: 1rem;
 		}
 
-		.error-text {
+		.noti-text {
 			margin: 1rem, 0rem;
 		}
 	</style>
@@ -44,8 +44,14 @@
 					</li>
 				</ul>
 				<div
+					th:if="*{create_success!=null and #strings.length(create_success)>0}"
+					class="noti-text d-flex justify-content-center"
+				>
+					<span class="text-info">Create new user successful!</span>
+				</div>
+				<div
 					th:if="*{error!=null and #strings.length(error)>0}"
-					class="error-text d-flex justify-content-center"
+					class="noti-text d-flex justify-content-center"
 				>
 					<span class="text-danger" th:text="${error}">Wrong email or password!</span>
 				</div>

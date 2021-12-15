@@ -16,6 +16,6 @@ import java.util.List;
 public class UserResponse {
     private String fullName;
     private String email;
-    private List<Role> roleList;
+    private List<String> roleList;
     private List<EventResponse> eventList;
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +18,7 @@ public class UserRequestLogin {
     private String email;
 
     @NotBlank(message = "Please enter your password")
-    @Min(value = 6L, message = "Minimum length password: 6")
+    @Size(min = 6, message = "Minimum length password: 6")
     private String password;
 
 }

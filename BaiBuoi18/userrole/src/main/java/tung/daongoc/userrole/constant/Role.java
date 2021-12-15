@@ -17,13 +17,13 @@ public enum Role {
         this.roleName = roleName;
     }
 
-    public String getRole() {
+    public String getRoleName() {
         return this.roleName;
     }
 
     public static Role of(String roleName){
         return Stream.of(Role.values())
-                .filter(p -> p.getRole().equalsIgnoreCase(roleName))
+                .filter(p -> p.getRoleName().equalsIgnoreCase(roleName))
                 .findFirst()
                 .orElseThrow(RoleNotFoundException::new);
     }

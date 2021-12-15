@@ -45,8 +45,25 @@ public class UserEntity {
 
     @PrePersist
     private void setUuid(){
-        if (this.uuid.isBlank()) {
+        if (this.uuid.isEmpty()) {
             this.uuid = UUID.randomUUID().toString();
+        }
+    }
+
+    public void addEvent(EventEntity eventEntity){
+        this.eventList.add(eventEntity);
+        eventEntity.setUser(this);
+    }
+
+    public void addRole(RoleEntity roleEntity){
+        this.roleList.add(roleEntity);
+        roleEntity.getUserList().add(this);
+    }
+
+    public void clearRole(){
+        for (RoleEntity roleEntity: this.roleList) {
+            roleEntity.getUserList().remove(this);
+            this.roleList.remove(roleEntity);
         }
     }
 }

@@ -13,6 +13,6 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class EventResponse {
-    private Event event;
-    private Date createdDate;
+    private String eventName;
+    private String createdDate;
 }

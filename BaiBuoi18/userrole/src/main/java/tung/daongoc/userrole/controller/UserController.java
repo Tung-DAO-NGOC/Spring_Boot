@@ -23,16 +23,22 @@ import java.util.Map;
 public class UserController {
 
     private static final String ATT_LOGIN_USER = "loginUser";
+    private static final String ATT_CREATE_SUCCESS = "create_success";
+    private static final String ATT_ERROR_INDEX = "error";
+
+    private static final String SESSION_ATT_UUID = "uuid";
 
     private static final String PAGE_INDEX = "index";
     private static final String PAGE_CREATE = "create";
+    private static final String PAGE_RECOVER_PASS = "recover_password";
 
     @Autowired
     UserGateway userGateway;
 
     @GetMapping(value = {"/", "/index"})
     public String index(Model model){
-        model.addAttribute("error", "");
+        model.addAttribute(ATT_ERROR_INDEX, "");
+        model.addAttribute(ATT_CREATE_SUCCESS, "");
         model.addAttribute(ATT_LOGIN_USER, new UserRequestLogin());
         return PAGE_INDEX;
     }
@@ -45,19 +51,29 @@ public class UserController {
 
     @GetMapping(value = "/recover")
     public String recoverGet(Model model){
-        model.addAttribute("notFound", "123456");
-        model.addAttribute("password", "123456");
         model.addAttribute("recoverEmail", new UserRequestRecover());
-        return "recover_password";
+        return PAGE_RECOVER_PASS;
     }
 
     @GetMapping(value = "/basic")
-    public String basicGet(Model model, HttpSession httpSession){
-        String uuidUser = httpSession.getAttribute("uuid").toString();
+    public String basicGet(Model model, HttpSession httpSession) throws Exception{
+        if (httpSession.getAttribute(SESSION_ATT_UUID).toString().isEmpty()) {
+            throw new Exception();
+        }
+        String uuidUser = httpSession.getAttribute(SESSION_ATT_UUID).toString();
         UserResponse userResponse = userGateway.findUserByUuid(uuidUser);
-        model.addAttribute("isAdmin", userResponse.getRoleList().contains(Role.ADMIN));
-
+        model.addAttribute("isAdmin", userResponse.getRoleList().contains(Role.ADMIN.getRoleName()));
+        model.addAttribute("user_name", userResponse.getFullName());
+        model.addAttribute("user_email", userResponse.getEmail());
+        model.addAttribute("user_role", userResponse.getRoleList());
+        model.addAttribute("user_event", userResponse.getEventList());
         return "basic";
+    }
+
+    @GetMapping(value = "/logout")
+    public String logoutGet(Model model, HttpSession httpSession){
+        httpSession.removeAttribute(SESSION_ATT_UUID);
+        return "redirect:/index";
     }
 
     @PostMapping(value = "/login")
@@ -69,32 +85,41 @@ public class UserController {
         } else {
             Map<String, Object> returnResult = userGateway.userLogin(loginUser);
             if (returnResult.containsKey("fail")) {
-                model.addAttribute("error", returnResult.get("fail").toString());
+                model.addAttribute(ATT_ERROR_INDEX, returnResult.get("fail").toString());
                 model.addAttribute(ATT_LOGIN_USER, returnResult.get("userLogin"));
                 return PAGE_INDEX;
             } else {
-                httpSession.setAttribute("uuid", returnResult.get("uuid"));
+                httpSession.setAttribute(SESSION_ATT_UUID, returnResult.get("uuid"));
                 return "redirect:/basic";
             }
         }
     }
 
     @PostMapping(value = "/create")
-    public String createPost(@Valid @ModelAttribute(value = "createUser") UserRequestCreate loginUser, BindingResult br, Model model){
+    public String createPost(@Valid @ModelAttribute(value = "createUser") UserRequestCreate createRequest, BindingResult br, Model model){
 
         if (br.hasErrors()) {
-            model.addAttribute("createUser", loginUser);
+            model.addAttribute("createUser", createRequest);
             return PAGE_CREATE;
-        } else
+        } else {
+            model.addAttribute(ATT_ERROR_INDEX, "");
+            model.addAttribute(ATT_CREATE_SUCCESS,userGateway.createUser(createRequest));
+            model.addAttribute(ATT_LOGIN_USER, new UserRequestLogin());
             return PAGE_INDEX;
+        }
     }
 
     @PostMapping(value = "/recover")
     public String recoverPost(@Valid @ModelAttribute(value = "recoverEmail") UserRequestRecover requestRecover, BindingResult br, Model model){
-        if (br.hasErrors()) {
-            model.addAttribute("recoverEmail", requestRecover);
-            return "recover_password";
+        if (!br.hasErrors()) {
+            Map<String, String> returnResult = userGateway.recoverPassword(requestRecover);
+            if (returnResult.containsKey("notFound")) {
+                model.addAttribute("noEmail", returnResult.get("notFound"));
+            } else {
+                model.addAttribute("newPassword", returnResult.get("newPassword"));
+            }
         }
-        return PAGE_INDEX;
+        model.addAttribute("recoverEmail", requestRecover);
+        return PAGE_RECOVER_PASS;
     }
 }

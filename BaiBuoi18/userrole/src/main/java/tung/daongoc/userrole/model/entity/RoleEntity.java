@@ -40,8 +40,8 @@ public class RoleEntity {
 
     @PrePersist
     void prePersist(){
-        if (!this.role.getRole().isBlank()){
-            this.roleName = this.role.getRole();
+        if (!this.role.getRoleName().isBlank()){
+            this.roleName = this.role.getRoleName();
         }
     }
 }
