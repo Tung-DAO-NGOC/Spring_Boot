@@ -5,6 +5,7 @@ import tung.daongoc.userrole.model.entity.UserEntity;
 
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public interface UserRepo extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
 

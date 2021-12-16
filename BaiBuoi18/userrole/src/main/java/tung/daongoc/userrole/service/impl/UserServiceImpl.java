@@ -8,12 +8,11 @@ import org.springframework.stereotype.Service;
 import tung.daongoc.userrole.constant.Event;
 import tung.daongoc.userrole.constant.GatewayName;
 import tung.daongoc.userrole.constant.Role;
+import tung.daongoc.userrole.exception.notfound.UuidNotFoundException;
 import tung.daongoc.userrole.model.entity.EventEntity;
 import tung.daongoc.userrole.model.entity.RoleEntity;
 import tung.daongoc.userrole.model.entity.UserEntity;
-import tung.daongoc.userrole.model.request.user.UserRequestCreate;
-import tung.daongoc.userrole.model.request.user.UserRequestLogin;
-import tung.daongoc.userrole.model.request.user.UserRequestRecover;
+import tung.daongoc.userrole.model.request.user.*;
 import tung.daongoc.userrole.model.response.EventResponse;
 import tung.daongoc.userrole.model.response.UserResponse;
 import tung.daongoc.userrole.repository.inter.EventRepo;
@@ -28,6 +27,7 @@ import java.util.*;
 
 @Slf4j
 @Service
+@SuppressWarnings("unused")
 public class UserServiceImpl implements UserService {
     @Autowired
     UserRepo userRepo;
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @ServiceActivator(inputChannel = GatewayName.User.LOGIN_SUCCESS)
-    @SuppressWarnings("java:S3655")
+    @SuppressWarnings({"java:S3655", "OptionalGetWithoutIsPresent"})
     public Map<String, Object> userLoginSuccess(UserRequestLogin userLogin) {
         log.info("User login success process");
         UserEntity userFound = userRepo.findByEmail(userLogin.getEmail()).get();
@@ -68,8 +68,11 @@ public class UserServiceImpl implements UserService {
     public UserResponse userFindByUuid(String uuid) {
         log.info("Get user by uuid");
         DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-
-        UserEntity userEntity = userRepo.findByUuid(uuid).get();
+        Optional<UserEntity> userOp = userRepo.findByUuid(uuid);
+        if (userOp.isEmpty()){
+            throw new UuidNotFoundException();
+        }
+        UserEntity userEntity = userOp.get();
         UserResponse userResponse = UserResponse.builder()
                 .fullName(userEntity.getFullName())
                 .email(userEntity.getEmail())
@@ -115,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @ServiceActivator(inputChannel = GatewayName.User.RECOVER_GENERATE_PASSWORD)
-    @SuppressWarnings("java:S3655")
+    @SuppressWarnings({"java:S3655", "OptionalGetWithoutIsPresent"})
     public Map<String, String> userRecoverSuccess(UserRequestRecover userRequestRecover) {
         Map<String, String> returnMap = new HashMap<>();
         String newPassword = RandomStringUtils.random(10, true, false);
@@ -125,6 +128,48 @@ public class UserServiceImpl implements UserService {
         userRepo.save(existedUser);
         returnMap.put("newPassword", newPassword);
         return returnMap;
+    }
+
+    @Override
+    @ServiceActivator(inputChannel = GatewayName.User.UPDATE_PASSWORD)
+    public void updatePassword(UserRequestUpdatePassword userRUP) {
+        Optional<UserEntity> userOp = userRepo.findByUuid(userRUP.getUuid());
+        if (userOp.isPresent()){
+            UserEntity user = userOp.get();
+            user.setPassword(userRUP.getPassword());
+            userRepo.save(user);
+            addAnEvent(Event.UPDATE_PASS, user);
+        } else {
+            throw new UuidNotFoundException();
+        }
+    }
+
+    @Override
+    @ServiceActivator(inputChannel = GatewayName.User.LOGIN_UUID)
+    public boolean userLoginWithUuid(String uuid) {
+        Optional<UserEntity> userOp = userRepo.findByUuid(uuid);
+        if (userOp.isPresent()){
+            UserEntity user = userOp.get();
+            addAnEvent(Event.LOGIN, user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    @ServiceActivator(inputChannel = GatewayName.User.UPDATE_INFO)
+    public void updateInfo(UserRequestUpdateInfo userRUI) {
+        Optional<UserEntity> userOp = userRepo.findByUuid(userRUI.getUuid());
+        if (userOp.isPresent()){
+            UserEntity user = userOp.get();
+            user.setEmail(userRUI.getEmail());
+            user.setFullName(userRUI.getFullName());
+            userRepo.save(user);
+            addAnEvent(Event.UPDATE_INFO, user);
+        } else {
+            throw new UuidNotFoundException();
+        }
     }
 
     private void addAnEvent(Event event, UserEntity userEntity){
@@ -142,14 +187,13 @@ public class UserServiceImpl implements UserService {
             RoleEntity existedRole = roleCheck.get();
             userEntity.addRole(existedRole);
             roleRepo.save(existedRole);
-            userRepo.save(userEntity);
         } else {
             RoleEntity newRole = new RoleEntity();
             newRole.setRole(role);
             userEntity.addRole(newRole);
             roleRepo.save(newRole);
-            userRepo.save(userEntity);
         }
+        userRepo.save(userEntity);
     }
 
 }

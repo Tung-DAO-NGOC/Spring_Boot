@@ -5,6 +5,7 @@ import tung.daongoc.userrole.model.entity.RoleEntity;
 
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public interface RoleRepo extends JpaRepository<RoleEntity, Long> {
     Optional<RoleEntity> findByRoleName(String roleName);
 }

@@ -1,17 +1,21 @@
 package tung.daongoc.userrole.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "user")
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,10 +38,12 @@ public class UserEntity {
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     @JsonManagedReference
+    @ToString.Exclude
     private List<RoleEntity> roleList;
 
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
+    @ToString.Exclude
     private List<EventEntity> eventList;
 
     @Column(name = "password", nullable = false)
@@ -65,5 +71,18 @@ public class UserEntity {
             roleEntity.getUserList().remove(this);
             this.roleList.remove(roleEntity);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        UserEntity that = (UserEntity) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

@@ -5,18 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import tung.daongoc.userrole.constant.Role;
 import tung.daongoc.userrole.controller.gateway.UserGateway;
-import tung.daongoc.userrole.model.request.user.UserRequestCreate;
-import tung.daongoc.userrole.model.request.user.UserRequestLogin;
-import tung.daongoc.userrole.model.request.user.UserRequestRecover;
+import tung.daongoc.userrole.exception.notfound.UuidNotFoundException;
+import tung.daongoc.userrole.model.request.user.*;
 import tung.daongoc.userrole.model.response.UserResponse;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Map;
 
+@SuppressWarnings("SameReturnValue")
 @Controller
 @RequestMapping()
 @Slf4j
@@ -25,18 +26,31 @@ public class UserController {
     private static final String ATT_LOGIN_USER = "loginUser";
     private static final String ATT_CREATE_SUCCESS = "create_success";
     private static final String ATT_ERROR_INDEX = "error";
+    private static final String ATT_CHANGE_PASS = "changePassword";
+    private static final String ATT_RECOVER_EMAIL = "recoverEmail";
+    private static final String ATT_CHANGE_PASS_RESULT = "result_update_pass";
+    private static final String ATT_CHANGE_INFO = "changeInfo";
+    private static final String ATT_CHANGE_INFO_RESULT = "result_update_info";
 
     private static final String SESSION_ATT_UUID = "uuid";
 
     private static final String PAGE_INDEX = "index";
     private static final String PAGE_CREATE = "create";
     private static final String PAGE_RECOVER_PASS = "recover_password";
+    private static final String PAGE_CHANGE_PASS ="change_password";
+    private static final String PAGE_CHANGE_INFO = "change_info";
 
     @Autowired
+    @SuppressWarnings("unused")
     UserGateway userGateway;
 
-    @GetMapping(value = {"/", "/index"})
-    public String index(Model model){
+    @GetMapping(value = {"/", "/login", "/index" })
+    public String index(Model model, HttpSession httpSession){
+        if (httpSession.getAttribute(SESSION_ATT_UUID) != null){
+            if (userGateway.userLoginWithUuid(httpSession.getAttribute(SESSION_ATT_UUID).toString())) {
+                return "redirect:/basic";
+            }
+        }
         model.addAttribute(ATT_ERROR_INDEX, "");
         model.addAttribute(ATT_CREATE_SUCCESS, "");
         model.addAttribute(ATT_LOGIN_USER, new UserRequestLogin());
@@ -51,14 +65,45 @@ public class UserController {
 
     @GetMapping(value = "/recover")
     public String recoverGet(Model model){
-        model.addAttribute("recoverEmail", new UserRequestRecover());
+        model.addAttribute(ATT_RECOVER_EMAIL, new UserRequestRecover());
         return PAGE_RECOVER_PASS;
     }
 
+    @GetMapping(value = "/change_info")
+    public String changeEmailGet(Model model, HttpSession httpSession){
+        if (httpSession.getAttribute(SESSION_ATT_UUID) == null) throw new UuidNotFoundException();
+        UserResponse userResponse = userGateway
+                .findUserByUuid(httpSession
+                .getAttribute(SESSION_ATT_UUID)
+                .toString());
+        UserRequestUpdateInfo userRequestUpdateInfo = UserRequestUpdateInfo
+                .builder()
+                    .email(userResponse.getEmail())
+                    .fullName(userResponse.getFullName())
+                .build();
+
+        model.addAttribute(ATT_CHANGE_INFO, userRequestUpdateInfo);
+        model.addAttribute(ATT_CHANGE_INFO_RESULT, false);
+        return PAGE_CHANGE_INFO;
+    }
+
+    @GetMapping(value = "/change_password")
+    public String changePassGet(Model model){
+        model.addAttribute(ATT_CHANGE_PASS_RESULT, false);
+        model.addAttribute(ATT_CHANGE_PASS, new UserRequestUpdatePassword());
+        return PAGE_CHANGE_PASS;
+    }
+
+    @GetMapping(value = "/change_role")
+    public String changeRoleGet(Model model, HttpSession httpSession){
+        // TODO
+        return "change_role";
+    }
+
     @GetMapping(value = "/basic")
-    public String basicGet(Model model, HttpSession httpSession) throws Exception{
-        if (httpSession.getAttribute(SESSION_ATT_UUID).toString().isEmpty()) {
-            throw new Exception();
+    public String basicGet(Model model, HttpSession httpSession) throws UuidNotFoundException{
+        if (httpSession.getAttribute(SESSION_ATT_UUID) == null) {
+            throw new UuidNotFoundException();
         }
         String uuidUser = httpSession.getAttribute(SESSION_ATT_UUID).toString();
         UserResponse userResponse = userGateway.findUserByUuid(uuidUser);
@@ -110,7 +155,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/recover")
-    public String recoverPost(@Valid @ModelAttribute(value = "recoverEmail") UserRequestRecover requestRecover, BindingResult br, Model model){
+    public String recoverPost(@Valid @ModelAttribute(value = ATT_RECOVER_EMAIL) UserRequestRecover requestRecover, BindingResult br, Model model){
         if (!br.hasErrors()) {
             Map<String, String> returnResult = userGateway.recoverPassword(requestRecover);
             if (returnResult.containsKey("notFound")) {
@@ -119,7 +164,46 @@ public class UserController {
                 model.addAttribute("newPassword", returnResult.get("newPassword"));
             }
         }
-        model.addAttribute("recoverEmail", requestRecover);
+        model.addAttribute(ATT_RECOVER_EMAIL, requestRecover);
         return PAGE_RECOVER_PASS;
+    }
+
+    @PostMapping(value = "/change_info")
+    public String changeEmailPost(@Valid @ModelAttribute(name = ATT_CHANGE_INFO)UserRequestUpdateInfo userRUI, BindingResult br, Model model, HttpSession httpSession){
+        if (br.hasErrors()){
+            model.addAttribute(ATT_CHANGE_INFO, userRUI);
+            model.addAttribute(ATT_CHANGE_INFO_RESULT, false);
+        } else {
+            if (httpSession.getAttribute(SESSION_ATT_UUID) == null) throw new UuidNotFoundException();
+            userRUI.setUuid(httpSession.getAttribute(SESSION_ATT_UUID).toString());
+            userGateway.updateInfo(userRUI);
+            model.addAttribute(ATT_CHANGE_INFO, userRUI);
+            model.addAttribute(ATT_CHANGE_INFO_RESULT, true);
+        }
+        return PAGE_CHANGE_INFO;
+    }
+
+    @PostMapping(value = "/change_password")
+    public String changePassPost(@Valid @ModelAttribute(value = ATT_CHANGE_PASS) UserRequestUpdatePassword userRUP, BindingResult br, Model model, HttpSession httpSession){
+        if (!userRUP.getPassword().equals(userRUP.getReconfirmPassword())){
+            br.addError(new FieldError(ATT_CHANGE_PASS, "reconfirmPassword", "Password not match"));
+        }
+        if (br.hasErrors()){
+            model.addAttribute(ATT_CHANGE_PASS, userRUP);
+            model.addAttribute(ATT_CHANGE_PASS_RESULT, false);
+        } else {
+            if (httpSession.getAttribute(SESSION_ATT_UUID) == null) throw new UuidNotFoundException();
+            userRUP.setUuid(httpSession.getAttribute(SESSION_ATT_UUID).toString());
+            userGateway.updatePassword(userRUP);
+            model.addAttribute(ATT_CHANGE_PASS_RESULT, true);
+            model.addAttribute(ATT_CHANGE_PASS, new UserRequestUpdatePassword());
+        }
+
+        return PAGE_CHANGE_PASS;
+    }
+
+    @PostMapping(value = "/change_role")
+    public String changeRolePost(){
+        return  null;
     }
 }

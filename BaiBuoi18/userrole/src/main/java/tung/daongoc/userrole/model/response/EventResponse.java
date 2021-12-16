@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tung.daongoc.userrole.constant.Event;
 
-import java.util.Date;
 
+@SuppressWarnings("unused")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

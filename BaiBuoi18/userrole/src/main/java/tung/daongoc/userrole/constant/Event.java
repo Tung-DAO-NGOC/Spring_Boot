@@ -7,8 +7,8 @@ import java.util.stream.Stream;
 public enum Event {
     CREATE("create","Create Account"),
     LOGIN("login", "Login"),
-    UPDATE_NAME_EMAIL("update_name_email", "Email/Name Updated"),
-    UPDATE_PASS("update_password", "Password Update"),
+    UPDATE_INFO("update_info", "Info Updated"),
+    UPDATE_PASS("update_password", "Password Updated"),
     RECOVER("recover_password", "Recover Password");
 
     private final String eventType;

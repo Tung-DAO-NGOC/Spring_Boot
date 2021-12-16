@@ -15,6 +15,7 @@ import java.util.Optional;
 @Component
 @Slf4j
 public class UserFilter {
+    @SuppressWarnings("unused")
     @Autowired
     UserRepo userRepo;
 
@@ -22,23 +23,17 @@ public class UserFilter {
     public boolean loginFilter(UserRequestLogin loginUser){
         log.info("Filter - Email");
         Optional<UserEntity> existedUser = userRepo.findByEmail(loginUser.getEmail());
-        if (!existedUser.isPresent()){
+        if (existedUser.isEmpty()){
             return false;
         } else {
-            if (!existedUser.get().getPassword().equals(loginUser.getPassword()))
-                return false;
+            return existedUser.get().getPassword().equals(loginUser.getPassword());
         }
-        return true;
     }
 
     @Filter(inputChannel = GatewayName.User.RECOVER_PASSWORD, outputChannel = GatewayName.User.RECOVER_GENERATE_PASSWORD, discardChannel = GatewayName.User.RECOVER_FAILED)
     public boolean recoverPasswordFilter(UserRequestRecover userRequestRecover){
         log.info("Filter - Recover Password");
         Optional<UserEntity> existedUser = userRepo.findByEmail(userRequestRecover.getEmail());
-        if (!existedUser.isPresent()){
-            return false;
-        } else {
-            return true;
-        }
+        return existedUser.isPresent();
     }
 }
