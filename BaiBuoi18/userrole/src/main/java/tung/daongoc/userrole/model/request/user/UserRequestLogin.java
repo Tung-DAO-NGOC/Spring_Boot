@@ -18,7 +18,7 @@ public class UserRequestLogin {
     private String email;
 
     @NotBlank(message = "Please enter your password")
-    @Size(min = 6, message = "Minimum length password: 6")
+    @Size(min = 4, message = "Minimum length password: 4")
     private String password;
 
 }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import tung.daongoc.userrole.constant.Event;
 import tung.daongoc.userrole.constant.GatewayName;
@@ -98,7 +99,7 @@ public class UserServiceImpl implements UserService {
         UserEntity newUser = new UserEntity();
         newUser.setEmail(userRequestCreate.getEmail());
         newUser.setFullName(userRequestCreate.getFullName());
-        newUser.setPassword(userRequestCreate.getPassword());
+        newUser.setPassword(BCrypt.hashpw(userRequestCreate.getPassword(), BCrypt.gensalt(16)));
         newUser.setUuid("");
         newUser.setRoleList(new ArrayList<>());
         newUser.setEventList(new ArrayList<>());
@@ -109,21 +110,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @ServiceActivator(inputChannel = GatewayName.User.RECOVER_FAILED)
-    public Map<String, String> userRecoverFail(UserRequestRecover userRequestRecover) {
+    @ServiceActivator(inputChannel = GatewayName.User.RECOVER_PASSWORD_FAILED)
+    public Map<String, String> userRecoverFail(UserRequestEmail userRequestEmail) {
         Map<String, String> returnMap = new HashMap<>();
         returnMap.put("notFound", "No email is found!");
         return returnMap;
     }
 
     @Override
-    @ServiceActivator(inputChannel = GatewayName.User.RECOVER_GENERATE_PASSWORD)
+    @ServiceActivator(inputChannel = GatewayName.User.RECOVER_PASSWORD_SUCCESS)
     @SuppressWarnings({"java:S3655", "OptionalGetWithoutIsPresent"})
-    public Map<String, String> userRecoverSuccess(UserRequestRecover userRequestRecover) {
+    public Map<String, String> userRecoverSuccess(UserRequestEmail userRequestEmail) {
         Map<String, String> returnMap = new HashMap<>();
         String newPassword = RandomStringUtils.random(10, true, false);
-        UserEntity existedUser = userRepo.findByEmail(userRequestRecover.getEmail()).get();
-        existedUser.setPassword(newPassword);
+        UserEntity existedUser = userRepo.findByEmail(userRequestEmail.getEmail()).get();
+        existedUser.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt(16)));
         addAnEvent(Event.RECOVER, existedUser);
         userRepo.save(existedUser);
         returnMap.put("newPassword", newPassword);
@@ -136,7 +137,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> userOp = userRepo.findByUuid(userRUP.getUuid());
         if (userOp.isPresent()){
             UserEntity user = userOp.get();
-            user.setPassword(userRUP.getPassword());
+            user.setPassword(BCrypt.hashpw(userRUP.getPassword(), BCrypt.gensalt(16)));
             userRepo.save(user);
             addAnEvent(Event.UPDATE_PASS, user);
         } else {
@@ -170,6 +171,41 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new UuidNotFoundException();
         }
+    }
+
+    @Override
+    @ServiceActivator(inputChannel = GatewayName.User.UPDATE_ROLE_GET_EMAIL_FAILED)
+    public Map<String, Object> userUpdateRoleEmailFailed(UserRequestEmail userRequestEmail) {
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("notFound", null);
+        return returnMap;
+    }
+
+    @Override
+    @ServiceActivator(inputChannel = GatewayName.User.UPDATE_ROLE_GET_EMAIL_SUCCESS)
+    @SuppressWarnings({"java:S3655", "OptionalGetWithoutIsPresent"})
+    public Map<String, Object> userUpdateRoleEmailSuccess(UserRequestEmail userRequestEmail) {
+        UserEntity user = userRepo.findByEmail(userRequestEmail.getEmail()).get();
+        UserRequestRole returnResult = new UserRequestRole();
+        returnResult.setUuid(user.getUuid());
+        returnResult.setRole(user.getRoleList().stream().
+                map(p -> p.getRole().getRoleName()).
+                toList());
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("userRequestRole", returnResult);
+        return returnMap;
+    }
+
+    @Override
+    @SuppressWarnings({"java:S3655", "OptionalGetWithoutIsPresent"})
+    @ServiceActivator(inputChannel = GatewayName.User.UPDATE_ROLE)
+    public void updateRole(UserRequestRole userRequestRole) {
+        UserEntity user = userRepo.findByUuid(userRequestRole.getUuid()).get();
+        user.clearRole();
+        for (String roleName: userRequestRole.getRole()) {
+            addARole(Role.of(roleName), user);
+        }
+        addAnEvent(Event.UPDATE_ROLE, user);
     }
 
     private void addAnEvent(Event event, UserEntity userEntity){

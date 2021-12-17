@@ -18,9 +18,9 @@ public interface UserService {
     @SuppressWarnings("SameReturnValue")
     boolean createUser(UserRequestCreate userRequestCreate);
 
-    Map<String, String> userRecoverFail(UserRequestRecover userRequestRecover);
+    Map<String, String> userRecoverFail(UserRequestEmail userRequestEmail);
 
-    Map<String, String> userRecoverSuccess(UserRequestRecover userRequestRecover);
+    Map<String, String> userRecoverSuccess(UserRequestEmail userRequestEmail);
 
     void updatePassword(UserRequestUpdatePassword userRUP);
 
@@ -28,4 +28,9 @@ public interface UserService {
 
     void updateInfo(UserRequestUpdateInfo userRUI);
 
+    Map<String, Object> userUpdateRoleEmailFailed(UserRequestEmail userRequestEmail);
+
+    Map<String, Object> userUpdateRoleEmailSuccess(UserRequestEmail userRequestEmail);
+
+    void updateRole(UserRequestRole userRequestRole);
 }

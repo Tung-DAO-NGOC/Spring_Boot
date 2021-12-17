@@ -31,6 +31,10 @@ public class UserController {
     private static final String ATT_CHANGE_PASS_RESULT = "result_update_pass";
     private static final String ATT_CHANGE_INFO = "changeInfo";
     private static final String ATT_CHANGE_INFO_RESULT = "result_update_info";
+    private static final String ATT_UPDATE_ROLE_USER_FOUND = "found_user";
+    private static final String ATT_UPDATE_ROLE_USER_NOT_FOUND = "notFound_user";
+    private static final String ATT_UPDATE_ROLE_USER_REQUEST_EMAIL = "userEmail";
+    private static final String ATT_UPDATE_ROLE_ROLE_REQUEST_ROLE = "roleRequest";
 
     private static final String SESSION_ATT_UUID = "uuid";
 
@@ -39,6 +43,8 @@ public class UserController {
     private static final String PAGE_RECOVER_PASS = "recover_password";
     private static final String PAGE_CHANGE_PASS ="change_password";
     private static final String PAGE_CHANGE_INFO = "change_info";
+    private static final String PAGE_CHANGE_ROLE ="change_role";
+
 
     @Autowired
     @SuppressWarnings("unused")
@@ -65,7 +71,7 @@ public class UserController {
 
     @GetMapping(value = "/recover")
     public String recoverGet(Model model){
-        model.addAttribute(ATT_RECOVER_EMAIL, new UserRequestRecover());
+        model.addAttribute(ATT_RECOVER_EMAIL, new UserRequestEmail());
         return PAGE_RECOVER_PASS;
     }
 
@@ -73,9 +79,7 @@ public class UserController {
     public String changeEmailGet(Model model, HttpSession httpSession){
         if (httpSession.getAttribute(SESSION_ATT_UUID) == null) throw new UuidNotFoundException();
         UserResponse userResponse = userGateway
-                .findUserByUuid(httpSession
-                .getAttribute(SESSION_ATT_UUID)
-                .toString());
+                .findUserByUuid(httpSession.getAttribute(SESSION_ATT_UUID).toString());
         UserRequestUpdateInfo userRequestUpdateInfo = UserRequestUpdateInfo
                 .builder()
                     .email(userResponse.getEmail())
@@ -96,7 +100,10 @@ public class UserController {
 
     @GetMapping(value = "/change_role")
     public String changeRoleGet(Model model, HttpSession httpSession){
-        // TODO
+        model.addAttribute(ATT_UPDATE_ROLE_USER_FOUND, false);
+        model.addAttribute(ATT_UPDATE_ROLE_USER_NOT_FOUND, false);
+        model.addAttribute(ATT_UPDATE_ROLE_USER_REQUEST_EMAIL, new UserRequestEmail());
+        model.addAttribute(ATT_UPDATE_ROLE_ROLE_REQUEST_ROLE, new UserRequestRole());
         return "change_role";
     }
 
@@ -105,8 +112,7 @@ public class UserController {
         if (httpSession.getAttribute(SESSION_ATT_UUID) == null) {
             throw new UuidNotFoundException();
         }
-        String uuidUser = httpSession.getAttribute(SESSION_ATT_UUID).toString();
-        UserResponse userResponse = userGateway.findUserByUuid(uuidUser);
+        UserResponse userResponse = userGateway.findUserByUuid(httpSession.getAttribute(SESSION_ATT_UUID).toString());
         model.addAttribute("isAdmin", userResponse.getRoleList().contains(Role.ADMIN.getRoleName()));
         model.addAttribute("user_name", userResponse.getFullName());
         model.addAttribute("user_email", userResponse.getEmail());
@@ -155,7 +161,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/recover")
-    public String recoverPost(@Valid @ModelAttribute(value = ATT_RECOVER_EMAIL) UserRequestRecover requestRecover, BindingResult br, Model model){
+    public String recoverPost(@Valid @ModelAttribute(value = ATT_RECOVER_EMAIL) UserRequestEmail requestRecover, BindingResult br, Model model){
         if (!br.hasErrors()) {
             Map<String, String> returnResult = userGateway.recoverPassword(requestRecover);
             if (returnResult.containsKey("notFound")) {
@@ -202,8 +208,36 @@ public class UserController {
         return PAGE_CHANGE_PASS;
     }
 
-    @PostMapping(value = "/change_role")
-    public String changeRolePost(){
-        return  null;
+    @PostMapping(value = "/update_role_finduser")
+    public String changeRolePostFindUser(@Valid @ModelAttribute(value = ATT_UPDATE_ROLE_USER_REQUEST_EMAIL)UserRequestEmail userEmail,
+                                         BindingResult br,
+                                         Model model){
+        if (br.hasErrors()){
+            model.addAttribute(ATT_UPDATE_ROLE_USER_NOT_FOUND, false);
+            model.addAttribute(ATT_UPDATE_ROLE_USER_FOUND, false);
+            model.addAttribute(ATT_UPDATE_ROLE_USER_REQUEST_EMAIL, userEmail);
+            model.addAttribute(ATT_UPDATE_ROLE_ROLE_REQUEST_ROLE, new UserRequestRole());
+        } else {
+            Map<String, Object> returnResult = userGateway.roleUpdateFindEmail(userEmail);
+            if (returnResult.containsKey("notFound")) {
+                model.addAttribute(ATT_UPDATE_ROLE_USER_NOT_FOUND, true);
+                model.addAttribute(ATT_UPDATE_ROLE_USER_FOUND, false);
+                model.addAttribute(ATT_UPDATE_ROLE_USER_REQUEST_EMAIL, userEmail);
+                model.addAttribute(ATT_UPDATE_ROLE_ROLE_REQUEST_ROLE, new UserRequestRole());
+            } else {
+                UserRequestRole userRequestRole = (UserRequestRole) returnResult.get("userRequestRole");
+                model.addAttribute(ATT_UPDATE_ROLE_USER_NOT_FOUND, false);
+                model.addAttribute(ATT_UPDATE_ROLE_USER_FOUND, true);
+                model.addAttribute(ATT_UPDATE_ROLE_USER_REQUEST_EMAIL, userEmail);
+                model.addAttribute(ATT_UPDATE_ROLE_ROLE_REQUEST_ROLE, userRequestRole);
+            }
+        }
+        return PAGE_CHANGE_ROLE;
+    }
+
+    @PostMapping(value = "/update_role")
+    public String changeRolePost(@ModelAttribute(value = ATT_UPDATE_ROLE_ROLE_REQUEST_ROLE) UserRequestRole userRequestRole){
+        userGateway.updateRole(userRequestRole);
+        return "redirect:/basic";
     }
 }

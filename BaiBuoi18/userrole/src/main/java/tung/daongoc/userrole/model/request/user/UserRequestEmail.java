@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestRecover {
+public class UserRequestEmail {
     @NotBlank(message = "Please provide an email")
     @Pattern(regexp = ".+@.+\\..+", message = "Please provide a valid email address")
     private String email;

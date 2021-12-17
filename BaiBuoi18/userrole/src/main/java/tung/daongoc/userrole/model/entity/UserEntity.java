@@ -6,6 +6,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -67,9 +68,10 @@ public class UserEntity {
     }
 
     public void clearRole(){
-        for (RoleEntity roleEntity: this.roleList) {
-            roleEntity.getUserList().remove(this);
+        List<RoleEntity> temporal = this.roleList.stream().toList();
+        for (RoleEntity roleEntity: temporal) {
             this.roleList.remove(roleEntity);
+            roleEntity.getUserList().remove(this);
         }
     }
 

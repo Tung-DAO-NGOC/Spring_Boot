@@ -9,6 +9,7 @@ public enum Event {
     LOGIN("login", "Login"),
     UPDATE_INFO("update_info", "Info Updated"),
     UPDATE_PASS("update_password", "Password Updated"),
+    UPDATE_ROLE("update_role", "Update Role"),
     RECOVER("recover_password", "Recover Password");
 
     private final String eventType;

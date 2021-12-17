@@ -20,7 +20,7 @@ public class UserRequestCreate {
     @NotBlank(message = "Please provide your name")
     private String fullName;
 
-    @Size(min = 6, message = "Your password must be at least 6 characters")
+    @Size(min = 4, message = "Your password must be at least 4 characters")
     private String password;
 
 }

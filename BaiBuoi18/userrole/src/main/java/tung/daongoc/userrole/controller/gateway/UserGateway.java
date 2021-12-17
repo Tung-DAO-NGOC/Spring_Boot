@@ -20,15 +20,21 @@ public interface UserGateway {
     @Gateway(requestChannel = GatewayName.User.GET_USER_UUID)
     UserResponse findUserByUuid(String userUuid);
 
+    @Gateway(requestChannel = GatewayName.User.UPDATE_ROLE_GET_EMAIL)
+    Map<String, Object> roleUpdateFindEmail(UserRequestEmail userRequestEmail);
+
     @Gateway(requestChannel = GatewayName.User.CREATE_USER)
     boolean createUser(UserRequestCreate userRequestCreate);
 
     @Gateway(requestChannel = GatewayName.User.RECOVER_PASSWORD)
-    Map<String, String> recoverPassword(UserRequestRecover userRequestRecover);
+    Map<String, String> recoverPassword(UserRequestEmail userRequestEmail);
 
     @Gateway(requestChannel = GatewayName.User.UPDATE_PASSWORD)
     void updatePassword(UserRequestUpdatePassword userRUP);
 
     @Gateway(requestChannel = GatewayName.User.UPDATE_INFO)
     void updateInfo(UserRequestUpdateInfo userRUI);
+
+    @Gateway(requestChannel = GatewayName.User.UPDATE_ROLE)
+    void updateRole(UserRequestRole userRequestRole);
 }

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html
+	lang="en"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template}"
+>
+	<head>
+		<title>Change password</title>
+	</head>
+	<body>
+		<section layout:fragment="fragment">
+			<div class="container">
+				<h1 class="text-center">Change password</h1>
+				<ul class="nav d-flex justify-content-center">
+					<li class="nav-item">
+						<a th:href="@{/basic}"> <button type="button" class="btn btn-primary">Back</button></a>
+					</li>
+				</ul>
+				<div th:if="${found_user}" class="d-flex justify-content-center">
+					<span class="text-success">An user is found!</span>
+				</div>
+				<div th:if="${notFound_user}" class="d-flex justify-content-center">
+					<span class="text-danger">No user is found!</span>
+				</div>
+				<form method="post" th:action="@{/update_role_finduser}" th:object="${userEmail}">
+					<div class="form-group row d-flex justify-content-center">
+						<div class="col-2 text-right">
+							<label class="col-form-label">Enter user email:</label>
+						</div>
+						<div class="col-5 text-left">
+							<input type="text" th:field="*{email}" class="form-control" />
+							<div th:if="${#fields.hasErrors('email')}" class="col-6 text-left">
+								<span class="text-danger" th:errors="*{email}"></span>
+							</div>
+						</div>
+						<div class="col-2 text-left">
+							<button type="submit" class="btn btn-primary">Find</button>
+						</div>
+					</div>
+				</form>
+				<form th:if="${found_user}" method="post" th:action="@{/update_role}" th:object="${roleRequest}">
+					<input type="text" hidden th:field="*{uuid}" value="${roleRequest.uuid}" />
+
+					<div class="form-group row d-flex justify-content-center">
+						<div class="col-2 text-right">Roles</div>
+
+						<div class="col-3 text-left">
+							<input
+								type="checkbox"
+								hidden
+								th:field="*{role}"
+								th:checked="${#lists.contains(roleRequest.role, 'admin')}"
+								value="admin"
+							/>
+							<input
+								type="checkbox"
+								id="customer"
+								th:field="*{role}"
+								th:checked="${#lists.contains(roleRequest.role, 'customer')}"
+								value="customer"
+							/>
+							<label for="customer"> Customer</label><br />
+							<input
+								type="checkbox"
+								id="developer"
+								th:field="*{role}"
+								th:checked="${#lists.contains(roleRequest.role, 'developer')}"
+								value="developer"
+							/>
+							<label for="developer"> Developer</label><br />
+							<input
+								type="checkbox"
+								id="sales"
+								th:field="*{role}"
+								th:checked="${#lists.contains(roleRequest.role, 'sales')}"
+								value="sales"
+							/>
+							<label for="sales"> Sales</label><br />
+							<input
+								type="checkbox"
+								id="operator"
+								th:field="*{role}"
+								th:checked="${#lists.contains(roleRequest.role, 'operator')}"
+								value="operator"
+							/>
+							<label for="operator"> Operator</label><br />
+							<input
+								type="checkbox"
+								id="trainer"
+								th:field="*{role}"
+								th:checked="${#lists.contains(roleRequest.role, 'trainer')}"
+								value="trainer"
+							/>
+							<label for="trainer"> Trainer</label><br />
+						</div>
+						<div class="col-2 text-left">
+							<button type="submit" class="btn btn-primary">Update</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</section>
+	</body>
+</html>
